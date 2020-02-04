@@ -22,6 +22,12 @@
 #include "s2/s2cell_union.h"
 %}
 
+%include std_string.i
+
+%inline %{
+using namespace std;
+%}
+
 %inline %{
   static PyObject *FromS2CellId(const S2CellId &cell_id) {
     return SWIG_NewPointerObj(new S2CellId(cell_id), SWIGTYPE_p_S2CellId,
@@ -347,6 +353,7 @@ class S2Point {
 %unignore S2CellUnion::GetDifference;
 %unignore S2CellUnion::GetRectBound;
 %unignore S2CellUnion::Init(std::vector<uint64> const &);
+%unignore S2CellUnion::InitFromBeginEnd(S2CellId, S2CellId);
 %unignore S2CellUnion::Intersection;
 %unignore S2CellUnion::Intersects;
 %unignore S2CellUnion::IsNormalized;
