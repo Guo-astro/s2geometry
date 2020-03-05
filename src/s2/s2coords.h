@@ -125,7 +125,7 @@ const int kLimitIJ = 1 << kMaxCellLevel;  // == S2CellId::kMaxSize
 
 // The maximum value of an si- or ti-coordinate.  The range of valid (si,ti)
 // values is [0..kMaxSiTi].
-unsigned const int kMaxSiTi = 1U << (kMaxCellLevel + 1);
+const unsigned int kMaxSiTi = 1U << (kMaxCellLevel + 1);
 
 // Convert an s- or t-value to the corresponding u- or v-value.  This is
 // a non-linear transformation from [-1,1] to [-1,1] that attempts to

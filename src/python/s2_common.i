@@ -20,6 +20,12 @@
 #include "s2/s2region_coverer.h"
 #include "s2/s2cell.h"
 #include "s2/s2cell_union.h"
+#include "s2/s2cell_index.h"
+%}
+
+%include std_string.i
+%inline %{
+using namespace std;
 %}
 
 %include std_string.i
@@ -300,10 +306,12 @@ class S2Point {
 %unignore S2Cell::GetS2LatLngEdge;
 %unignore S2Cell::GetS2LatLngVertex;
 %unignore S2Cell::GetVertex;
+%unignore S2Cell::GetVertexRaw;
 %unignore S2Cell::MayIntersect(const S2Cell&) const;
 %unignore S2Cell::face;
 %unignore S2Cell::id;
 %unignore S2Cell::level;
+%unignore S2Cell::FromFace(int face);
 %unignore S2CellId;
 %unignore S2CellId::S2CellId;
 %unignore S2CellId::~S2CellId;
@@ -314,6 +322,7 @@ class S2Point {
 %unignore S2CellId::FromLatLng;
 %unignore S2CellId::FromPoint;
 %unignore S2CellId::FromToken;
+%unignore S2CellId::GetBoundST;
 %unignore S2CellId::GetCenterSiTi(int*, int*) const;
 %unignore S2CellId::GetEdgeNeighbors;
 %unignore S2CellId::ToFaceIJOrientation(int*, int*, int*) const;
@@ -355,6 +364,7 @@ class S2Point {
 %unignore S2CellUnion::Init(std::vector<uint64> const &);
 %unignore S2CellUnion::InitFromBeginEnd(S2CellId, S2CellId);
 %unignore S2CellUnion::Intersection;
+%unignore S2CellUnion::Union(const S2CellUnion& y) const;
 %unignore S2CellUnion::Intersects;
 %unignore S2CellUnion::IsNormalized;
 %unignore S2CellUnion::MayIntersect(const S2Cell&) const;
@@ -365,6 +375,7 @@ class S2Point {
 %unignore S2CellUnion::cell_ids;
 %unignore S2CellUnion::empty;
 %unignore S2CellUnion::num_cells;
+%unignore S2CellUnion::WholeSphere;
 %unignore S2LatLng;
 %unignore S2LatLng::S2LatLng;
 %unignore S2LatLng::~S2LatLng;
@@ -433,6 +444,8 @@ class S2Point {
 %unignore S2Loop::GetCentroid;
 %unignore S2Loop::GetDistance;
 %unignore S2Loop::GetRectBound;
+%unignore S2Loop::GetArea;
+%unignore S2Loop::IsNormalized;
 %unignore S2Loop::GetS2LatLngVertex;
 %unignore S2Loop::Init;
 %unignore S2Loop::Intersects;
@@ -446,6 +459,7 @@ class S2Point {
 %unignore S2Loop::num_vertices;
 %unignore S2Loop::sign;
 %unignore S2Loop::vertex;
+%unignore S2Loop::oriented_vertex;
 %unignore S2Polygon;
 %unignore S2Polygon::S2Polygon;
 %unignore S2Polygon::~S2Polygon;
@@ -463,6 +477,9 @@ class S2Point {
 %unignore S2Polygon::GetRectBound;
 %unignore S2Polygon::Init;
 %unignore S2Polygon::InitNested;
+%unignore S2Polygon::IsNormalized;
+%unignore S2Polygon::InitToCellUnionBorder(const S2CellUnion& cells);
+%unignore S2Polygon::InitToUnion(const S2Polygon* a, const S2Polygon* b);
 %unignore S2Polygon::Intersects;
 %unignore S2Polygon::IntersectWithPolyline;
 %unignore S2Polygon::IsValid;
@@ -507,6 +524,96 @@ class S2Point {
 %unignore S2RegionCoverer::GetInteriorCovering(const S2Region&,
                                                std::vector<S2CellId>*);
 
+%unignore LabelledCell;
+%unignore LabelledCell::Label;
+%unignore LabelledCell::~Label;
+%unignore LabelledCell::LabelledCell(S2CellId, Label);
+%unignore LabelledCell::~LabelledCell;
+%unignore S2CellIndex;
+%unignore S2CellIndex::S2CellIndex;
+%unignore S2CellIndex::num_cells;
+%unignore S2CellIndex::Add(S2CellId, Label);
+%unignore S2CellIndex::Add(const S2CellUnion&, Label);
+%unignore S2CellIndex::Build;
+%unignore S2CellIndex::Clear;
+%unignore S2CellIndex::GetIntersectingLabels(const S2CellUnion&) const;
+
+%unignore R2Rect;
+%unignore R2Rect::~R2Rect;
+%unignore R2Rect::lo;
+%unignore R2Rect::hi;
+
+%unignore R2Point;
+%unignore R2Point::~R2Point;
+%unignore R2Point::x;
+%unignore R2Point::y;
+
+%unignore XYZtoFace(const S2Point& p);
+%inline %{
+  int XYZtoFace(const S2Point& p) {
+    int face;
+    unsigned int si, ti;
+    S2::XYZtoFaceSiTi(p, &face, &si, &ti);
+
+    return face;
+  }
+%}
+
+%unignore XYZtoSi(const S2Point& p);
+%inline %{
+  unsigned int XYZtoSi(const S2Point& p) {
+    int face;
+    unsigned int si, ti;
+    S2::XYZtoFaceSiTi(p, &face, &si, &ti);
+
+    return si;
+  }
+%}
+
+%unignore XYZtoTi(const S2Point& p);
+%inline %{
+  unsigned int XYZtoTi(const S2Point& p) {
+    int face;
+    unsigned int si, ti;
+    S2::XYZtoFaceSiTi(p, &face, &si, &ti);
+
+    return ti;
+  }
+%}
+
+%unignore S2::FaceSiTitoXYZ(int face, unsigned int si, unsigned int ti);
+%unignore S2::STtoSiTi(double s);
+%unignore S2::SiTitoST(unsigned int si);
+%unignore S2::UVtoST(double u);
+%unignore S2::STtoUV(double u);
+
+class R2Point {
+ public:
+  ~R2Point();
+  double x() const;
+  double y() const;
+};
+
+%unignore ValidFaceXYZtoU(int face, const S2Point& p);
+%unignore ValidFaceXYZtoV(int face, const S2Point& p);
+%inline %{
+double ValidFaceXYZtoU(int face, const S2Point& p) {
+  double u, v;
+  S2::ValidFaceXYZtoUV(face, p, &u, &v);
+
+  return u;
+};
+
+double ValidFaceXYZtoV(int face, const S2Point& p) {
+  double u, v;
+  S2::ValidFaceXYZtoUV(face, p, &u, &v);
+
+  return v;
+};
+%}
+
+%unignore S2Earth::RadiusKm();
+
 %include "s2/r1interval.h"
 %include "s2/s1angle.h"
 %include "s2/s1chord_angle.h"
@@ -525,6 +632,14 @@ class S2Point {
 %include "s2/s2region_coverer.h"
 %include "s2/s2cell.h"
 %include "s2/s2cell_union.h"
+%include "s2/s2coords.h"
+%include "s2/r2rect.h"
+%include "s2/r2.h"
+%include "s2/s2earth.h"
+
+%feature("flatnested", "1");
+%include "s2/s2cell_index.h"
+%template(LabelVec) std::vector<Label>;
 
 %unignoreall
 

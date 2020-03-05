@@ -181,7 +181,7 @@ class S2CellIndex {
   struct RangeNode;
 
   // A special label indicating that ContentsIterator::done() is true.
-  static Label constexpr kDoneContents = -1;
+  static constexpr Label kDoneContents = -1;
 
   // Represents a node in the (cell_id, label) tree.  Cells are organized in a
   // tree such that the ancestors of a given node contain that node.
