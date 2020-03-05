@@ -364,6 +364,7 @@ class S2Point {
 %unignore S2CellUnion::Init(std::vector<uint64> const &);
 %unignore S2CellUnion::InitFromBeginEnd(S2CellId, S2CellId);
 %unignore S2CellUnion::Intersection;
+%unignore S2CellUnion::Difference;
 %unignore S2CellUnion::Union(const S2CellUnion& y) const;
 %unignore S2CellUnion::Intersects;
 %unignore S2CellUnion::IsNormalized;
