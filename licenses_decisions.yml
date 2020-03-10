@@ -1,0 +1,49 @@
+---
+- - :add_package
+  - s2geometry
+  - '1'
+  - &1
+    :who: 
+    :why: 
+    :versions: []
+    :when: 2020-03-10 07:02:15.623227797 Z
+- - :license
+  - s2geometry
+  - Apache 2.0
+  - *1
+- - :add_package
+  - openssl
+  - 1.1.1d
+  - &2
+    :who: 
+    :why: 
+    :versions: []
+    :when: 2020-03-10 07:03:01.162525631 Z
+- - :license
+  - openssl
+  - Apache 2.0
+  - *2
+- - :add_package
+  - python
+  - '3'
+  - &3
+    :who: 
+    :why: 
+    :versions: []
+    :when: 2020-03-10 07:10:09.587199809 Z
+- - :license
+  - python
+  - PSF
+  - *3
+- - :add_package
+  - swig
+  - '4.0'
+  - &1
+    :who: 
+    :why: 
+    :versions: []
+    :when: 2020-03-10 07:13:43.278635721 Z
+- - :license
+  - swig
+  - GPL
+  - *1
